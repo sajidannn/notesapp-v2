@@ -6,6 +6,9 @@ const {
   editNote
 } = require('./note.repository');
 
+const NotFoundError = require('../../exception/NotFoundError');
+const InvariantError = require('../../exception/InvariantError');
+
 const getAllNotes = async () => {
   const notes = await findNotes();
   return notes;
@@ -15,20 +18,20 @@ const getNoteById = async (id) => {
   const note = await findNoteById(id);
 
   if (!note) {
-    throw Error('Note not found');
+    throw new NotFoundError('Note not found');
   };
 
   return note;
 };
 
 const addNote = async ({ title, body, tags }) => {
-  const note = await createNote({ title, body, tags });
+  const noteId = await createNote({ title, body, tags });
 
-  if (!note) {
-    throw Error('Note could not be created');
+  if (!noteId) {
+    throw new InvariantError('Note could not be created');
   }
 
-  return note.id;
+  return noteId;
 };
 
 const editNoteById = async ({ id, title, body, tags }) => {

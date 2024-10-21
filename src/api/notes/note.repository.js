@@ -13,13 +13,15 @@ const findNoteById = async (id) => {
 };
 
 const createNote = async ({ title, body, tags }) => {
-  return await prisma.notes.create({
+  const note = await prisma.notes.create({
     data: {
       title,
       body,
       tags,
     },
   });
+
+  return note.id;
 };
 
 const editNote = async ({ id, title, body, tags }) => {

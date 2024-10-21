@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const NotesValidator = require('../../validator/notes');
 
 const {
   getAllNotes,
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
   });
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const noteId = req.params.id;
     const note = await getNoteById(noteId);
@@ -30,15 +31,14 @@ router.get('/:id', async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(404).send({
-      status: 'error',
-      message: error.message,
-    });
+    next(error);
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
+    NotesValidator.validateNotePayload(req.body);
+
     const { title = 'untitled', body, tags } = req.body;
     const noteId = await addNote({ title, body, tags });
     res.status(201).send({
@@ -47,31 +47,41 @@ router.post('/', async (req, res) => {
       data: { noteId },
     });
   } catch (error) {
-    res.status(400).send({
-      status: 'error',
-      message: error.message,
-    });
+    next(error);
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateRequest('PUT'), updateNote);
+
+router.patch('/:id', validateRequest('PATCH'), updateNote);
+
+function validateRequest(method) {
+  return (req, res, next) => {
+    if (method === 'PUT') {
+      NotesValidator.validateNotePayload(req.body);
+    } else if (method === 'PATCH') {
+      NotesValidator.validateNotePatchPayload(req.body);
+    }
+    next();
+  };
+}
+
+async function updateNote(req, res, next) {
   try {
     const noteId = req.params.id;
     const { title, body, tags } = req.body;
     await editNoteById({ id: noteId, title, body, tags });
+
     res.status(200).send({
       status: 'success',
       message: 'Note updated',
     });
   } catch (error) {
-    res.status(404).send({
-      status: 'error',
-      message: error.message,
-    });
+    next(error);
   }
-});
+}
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const noteId = req.params.id;
     await deleteNoteById(noteId);
@@ -80,10 +90,7 @@ router.delete('/:id', async (req, res) => {
       message: 'Note deleted',
     });
   } catch (error) {
-    res.status(404).send({
-      status: 'error',
-      message: error.message,
-    });
+    next(error);
   }
 });
 
