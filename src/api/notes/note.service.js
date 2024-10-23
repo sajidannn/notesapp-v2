@@ -1,13 +1,6 @@
-const {
-  findNotes,
-  createNote,
-  findNoteById,
-  deleteNote,
-  editNote
-} = require('./note.repository');
-
-const NotFoundError = require('../../exception/NotFoundError');
-const InvariantError = require('../../exception/InvariantError');
+import { findNotes, createNote, findNoteById, deleteNote, editNote } from './note.repository.js';
+import NotFoundError from '../../exception/NotFoundError.js';
+import InvariantError from '../../exception/InvariantError.js';
 
 const getAllNotes = async () => {
   const notes = await findNotes();
@@ -44,7 +37,7 @@ const deleteNoteById = async (id) => {
   await deleteNote(id);
 };
 
-module.exports = {
+export {
   getAllNotes,
   addNote,
   getNoteById,

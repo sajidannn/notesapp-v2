@@ -1,15 +1,15 @@
-const express = require('express');
-const dotenv = require('dotenv');
+import express, { json } from 'express';
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
 
 const app = express();
 const port = process.env.PORT;
 
-const notesRouter = require('./api/notes/note.controller');
-const ClientError = require('./exception/ClientError');
+import notesRouter from './api/notes/note.controller.js';
+import ClientError from './exception/ClientError.js';
 
-app.use(express.json());
+app.use(json());
 
 app.get('/', (req, res) => {
   res.send('Hello World');

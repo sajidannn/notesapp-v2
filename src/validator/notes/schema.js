@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const notePayloadSchema = Joi.object({
   title: Joi.string().min(3).required(),
@@ -6,6 +6,6 @@ const notePayloadSchema = Joi.object({
   tags: Joi.array().items(Joi.string()).required(),
 });
 
-const notePatchPayloaadSchema = notePayloadSchema.fork(['title', 'body', 'tags'], (schema) => schema.optional());
+const notePatchPayloadSchema = notePayloadSchema.fork(['title', 'body', 'tags'], (schema) => schema.optional());
 
-module.exports = { notePayloadSchema, notePatchPayloaadSchema };
+export { notePayloadSchema, notePatchPayloadSchema };

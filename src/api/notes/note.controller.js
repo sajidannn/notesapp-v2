@@ -1,14 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const NotesValidator = require('../../validator/notes');
+import { Router } from 'express';
+import { getAllNotes, addNote, getNoteById, deleteNoteById, editNoteById } from './note.service.js';
+import NotesValidator from '../../validator/notes/index.js';
 
-const {
-  getAllNotes,
-  addNote,
-  getNoteById,
-  deleteNoteById,
-  editNoteById
-} = require('./note.service');
+const router = Router();
 
 router.get('/', async (req, res) => {
   const notes = await getAllNotes();
@@ -94,4 +88,4 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;

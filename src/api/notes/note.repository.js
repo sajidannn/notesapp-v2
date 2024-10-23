@@ -1,4 +1,4 @@
-const prisma = require('../../db/index');
+import prisma from '../../db/index.js';
 
 const findNotes = async () => {
   return await prisma.notes.findMany();
@@ -45,7 +45,7 @@ const deleteNote = async (id) => {
   });
 };
 
-module.exports = {
+export {
   findNotes,
   createNote,
   findNoteById,

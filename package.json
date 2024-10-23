@@ -1,6 +1,7 @@
 {
   "name": "notesapp-v2",
   "version": "1.0.0",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "nodemon src/server.js"
