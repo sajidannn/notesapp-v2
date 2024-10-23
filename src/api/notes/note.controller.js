@@ -4,6 +4,22 @@ import NotesValidator from '../../validator/notes/index.js';
 
 const router = Router();
 
+router.post('/', async (req, res, next) => {
+  try {
+    NotesValidator.validateNotePayload(req.body);
+
+    const { title = 'untitled', body, tags } = req.body;
+    const noteId = await addNote({ title, body, tags });
+    res.status(201).send({
+      status: 'success',
+      message: 'New note created',
+      data: { noteId },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/', async (req, res) => {
   const notes = await getAllNotes();
   res.send({
@@ -23,22 +39,6 @@ router.get('/:id', async (req, res, next) => {
       data: {
         note,
       },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post('/', async (req, res, next) => {
-  try {
-    NotesValidator.validateNotePayload(req.body);
-
-    const { title = 'untitled', body, tags } = req.body;
-    const noteId = await addNote({ title, body, tags });
-    res.status(201).send({
-      status: 'success',
-      message: 'New note created',
-      data: { noteId },
     });
   } catch (error) {
     next(error);

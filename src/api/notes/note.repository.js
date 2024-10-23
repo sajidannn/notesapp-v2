@@ -1,5 +1,20 @@
 import prisma from '../../db/index.js';
 
+const createNote = async ({ id, title, body, tags, createdAt, updatedAt }) => {
+  const note = await prisma.notes.create({
+    data: {
+      id,
+      title,
+      body,
+      tags,
+      createdAt,
+      updatedAt,
+    },
+  });
+
+  return note.id;
+};
+
 const findNotes = async () => {
   return await prisma.notes.findMany();
 };
@@ -12,19 +27,7 @@ const findNoteById = async (id) => {
   });
 };
 
-const createNote = async ({ title, body, tags }) => {
-  const note = await prisma.notes.create({
-    data: {
-      title,
-      body,
-      tags,
-    },
-  });
-
-  return note.id;
-};
-
-const editNote = async ({ id, title, body, tags }) => {
+const editNote = async ({ id, title, body, tags, updatedAt }) => {
   await prisma.notes.update({
     where: {
       id,
@@ -33,6 +36,7 @@ const editNote = async ({ id, title, body, tags }) => {
       title,
       body,
       tags,
+      updatedAt,
     },
   });
 };
